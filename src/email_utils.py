@@ -1,8 +1,8 @@
 import smtplib
+from ast import literal_eval
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from ast import literal_eval
 
 from .constants import ENV, FOOTER_IMG, HEADER_IMG
 

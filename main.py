@@ -1,6 +1,6 @@
-from src import sender
-from src import subject_title, mime_text, body_content, body_title
 import fire
+
+from src import body_content, body_title, mime_text, sender, subject_title
 
 
 def send_mail(project_name, log_file):

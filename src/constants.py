@@ -1,6 +1,6 @@
-from dotenv import dotenv_values
 from datetime import datetime
 
+from dotenv import dotenv_values
 
 ENV = dotenv_values('.env')
 
