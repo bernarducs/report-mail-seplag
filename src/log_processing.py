@@ -18,10 +18,17 @@ def body_title():
 def all_logs(log_file):
     with open(log_file, 'r', encoding='utf-8') as txt_file:
         all_logs = txt_file.readlines()
+    
+    logs_with_date = list()
+    for log_ in all_logs:
+        log_date = datetime.strptime(log_[:10], '%Y-%m-%d') # ten first chars
+        log_part = log_[24:].replace('\n', '').split(":")
+        log_level = log_part[0] # INFO or WARNING or other level...
+        log_content = log_part[1]
 
-    logs_with_date = [
-        (datetime.strptime(log_[:10], '%Y-%m-%d'), log_[24:].replace('\n', '')) 
-        for log_ in all_logs]
+        logs_with_date.append(
+            (log_date, log_level, log_content )
+        )
         
     return logs_with_date
 
@@ -29,7 +36,7 @@ def all_logs(log_file):
 def last_logs(log_file):
     all_logs_ = all_logs(log_file)
     return [
-        (date_, log_) for date_, log_ in all_logs_ if date_ == all_logs_[-1][0]
+        (date_, level_, log_) for date_, level_, log_ in all_logs_ if date_ == all_logs_[-1][0]
     ]
 
 
@@ -40,7 +47,7 @@ def body_content(log_file):
 
 def log_content_styled(log):
     highlight_log = ''.join(
-        [apply_warning_highlight(log_) for _, log_ in log]
+        [apply_warning_highlight(level_, content_) for _, level_, content_ in log]
         )
     
     return \
@@ -54,8 +61,8 @@ def log_content_styled(log):
         + '</ul>'
 
 
-def apply_warning_highlight(log):
-    if 'warning' in log.lower():
+def apply_warning_highlight(level, content):
+    if level == 'WARNING':
         return \
             '<li'  \
                 + ' style="list-style: none;' \
@@ -64,7 +71,7 @@ def apply_warning_highlight(log):
                 + ' padding: 15px;' \
                 + ' border-radius: 15px;' \
                 + ' text-align:' \
-                + f' center;">{log}' \
+                + f' center;">{content}' \
             + '</li>'
     else:
         return \
@@ -74,7 +81,7 @@ def apply_warning_highlight(log):
                 + ' border: 1px solid #C8C8C8;' \
                 + ' padding: 15px;' \
                 + ' border-radius: 15px;' \
-                + f' text-align: center;">{log}' \
+                + f' text-align: center;">{content}' \
             + '</li>'
 
 
